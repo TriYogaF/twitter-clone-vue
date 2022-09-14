@@ -26,9 +26,14 @@ export default {
 
 <style>
 .navbar {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #0f3460;
   align-items: center;
   padding: 10px 10px;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .navbar,
