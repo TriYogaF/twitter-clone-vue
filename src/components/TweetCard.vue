@@ -5,7 +5,7 @@
         <Avatar />
         <p class="name">{{ this.user.fullname }} {{ this.user.username }}</p>
       </div>
-      <p>{{ this.tweet }}</p>
+      <p>{{ this.tweet.content }}</p>
     </div>
     <div class="reply"></div>
   </div>
@@ -20,7 +20,7 @@ export default {
   props: {
     id: Number,
     user: Object,
-    tweet: String,
+    tweet: Object,
   },
   components: { Avatar },
 };
