@@ -27,7 +27,11 @@ export default {
             fullname: "Elq",
             username: "@elq",
           },
-          tweet: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, veniam laborum a sint doloremque",
+          tweet: {
+            content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, veniam laborum a sint doloremque",
+            like: 10,
+            retweet: 2,
+          },
         },
         {
           id: 2,
@@ -35,7 +39,11 @@ export default {
             fullname: "Lyn",
             username: "@lyn",
           },
-          tweet: "repellat ab atque, assumenda odio optio iure in perspiciatis. Impedit commodi itaque dicta facere sint? Quaerat?",
+          tweet: {
+            content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, veniam laborum a sint doloremque",
+            like: 2,
+            retweet: 0,
+          },
         },
         // {
         //   id: 3,
@@ -59,9 +67,7 @@ export default {
 <style>
 .main {
   max-width: 800px;
-  /* color: rgb(0, 0, 0); */
   background-color: rgba(255, 255, 255, 0.15);
-  /* display: flex; */
   justify-content: center;
   margin: auto;
   margin-top: 100px;
