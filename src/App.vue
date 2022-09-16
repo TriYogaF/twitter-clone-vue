@@ -1,6 +1,7 @@
 <template>
   <Navbar />
   <div class="main">
+    <TweetInput v-on:tweet="tweet" />
     <h3 class="title">Feeds</h3>
     <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-bind="tweet" />
   </div>
@@ -10,8 +11,9 @@
 import Navbar from "./components/Navbar.vue";
 import gambar from "./assets/pic.jpg";
 import TweetCard from "./components/TweetCard.vue";
+import TweetInput from "./components/TweetInput.vue";
 export default {
-  components: { Navbar, TweetCard },
+  components: { Navbar, TweetCard, TweetInput },
   data() {
     return {
       user: {
@@ -45,21 +47,40 @@ export default {
             retweet: 0,
           },
         },
-        // {
-        //   id: 3,
-        //   user: this.user,
-        //   tweet: "repellat ab atque, assumenda odio optio iure in perspiciatis. Impedit commodi itaque dicta facere sint? Quaerat?",
-        // },
       ],
     };
   },
   provide() {
     return {
-      // fullname: computed(() => this.user.fullname),
       fullname: this.user.fullname,
       username: this.user.username,
       avatarUrl: this.user.avatarUrl,
     };
+  },
+  methods: {
+    tweet(ele) {
+      this.tweets.unshift({
+        id: this.getHighestId,
+        user: {
+          fullname: "Tri Yoga",
+          username: "@triyogaf",
+        },
+        tweet: {
+          content: ele,
+          like: 0,
+          retweet: 0,
+        },
+      });
+      console.log(this.tweets);
+    },
+  },
+  computed: {
+    getHighestId() {
+      const ids = this.tweets.map((object) => {
+        return object.id;
+      });
+      return Math.max(...ids) + 1;
+    },
   },
 };
 </script>
