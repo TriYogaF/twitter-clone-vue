@@ -14,9 +14,6 @@
 <script>
 import Avatar from "./Avatar.vue";
 export default {
-  mounted() {
-    console.log(`user ${this.user}`);
-  },
   props: {
     id: Number,
     user: Object,

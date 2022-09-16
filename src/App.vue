@@ -22,7 +22,6 @@ export default {
         avatarUrl: gambar,
       },
       indexTweets: 0,
-      // idCount: this.tweets.length,
       tweets: [
         {
           id: 1,
@@ -60,8 +59,8 @@ export default {
   },
   methods: {
     tweet(ele) {
-      this.tweets.push({
-        id: this.tweets[this.tweets.length - 1].id + 1,
+      this.tweets.unshift({
+        id: this.getHighestId,
         user: {
           fullname: "Tri Yoga",
           username: "@triyogaf",
@@ -73,6 +72,14 @@ export default {
         },
       });
       console.log(this.tweets);
+    },
+  },
+  computed: {
+    getHighestId() {
+      const ids = this.tweets.map((object) => {
+        return object.id;
+      });
+      return Math.max(...ids) + 1;
     },
   },
 };

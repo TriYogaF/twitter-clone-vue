@@ -3,7 +3,7 @@
     <textarea v-model="tweet" name="input" id="input"></textarea>
     <div class="ket">
       <span>{{ this.tweet.length }}/10 | {{ this.tweet }}</span>
-      <button :class="this.tweet.length > 10 ? 'disable' : ''" type="submit" @click="$emit('tweet', tweet)">Tweet</button>
+      <button :class="this.tweet.length > 10 ? 'disable' : ''" :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="$emit('tweet', tweet)">Tweet</button>
     </div>
   </div>
 </template>
@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       tweet: "",
+      btnDisabled: true,
     };
   },
 };
