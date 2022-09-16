@@ -1,9 +1,9 @@
 <template>
   <div class="wrap-input">
-    <textarea v-model="tweet" name="input" id="input"></textarea>
+    <textarea ref="input" v-model="tweet" name="input" id="input"></textarea>
     <div class="ket">
-      <span>{{ this.tweet.length }}/10 | {{ this.tweet }}</span>
-      <button :class="this.tweet.length > 10 ? 'disable' : ''" :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="$emit('tweet', tweet)">Tweet</button>
+      <span>{{ this.tweet.length }}/10</span>
+      <button :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="$emit('tweet', tweet)">Tweet</button>
     </div>
   </div>
 </template>
@@ -15,6 +15,9 @@ export default {
       tweet: "",
       btnDisabled: true,
     };
+  },
+  mounted() {
+    this.$refs.input.focus();
   },
 };
 </script>
@@ -30,6 +33,7 @@ textarea {
   width: 100%;
   height: 100px;
   border-radius: 8px;
+  padding: 4px;
 }
 .ket {
   padding: 8px 0px;
@@ -37,7 +41,7 @@ textarea {
   justify-content: space-between;
 }
 
-.disable {
+/* .disable {
   background-color: gray;
-}
+} */
 </style>
