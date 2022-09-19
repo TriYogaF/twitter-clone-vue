@@ -3,7 +3,7 @@
   <div class="main">
     <TweetInput v-on:tweet="tweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-bind="tweet" />
+    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:like="likeCount" v-on:retweet="retweetCount" :on-delete="deleteTweet" v-bind="tweet" />
   </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
             like: 10,
             retweet: 2,
           },
+          comments: {},
         },
         {
           id: 2,
@@ -46,6 +47,7 @@ export default {
             like: 2,
             retweet: 0,
           },
+          comments: {},
         },
       ],
     };
@@ -70,7 +72,27 @@ export default {
           like: 0,
           retweet: 0,
         },
+        comments: {},
       });
+      console.log(this.tweets);
+      console.log(ele);
+    },
+    likeCount(e) {
+      // this.tweets.find(({ id }) => id == e).tweet.like + 1;
+      console.log(this.tweets.find(({ id }) => id == e).tweet.like++);
+      // console.log(e.target);
+    },
+    retweetCount(e) {
+      // this.tweets.find(({ id }) => id == e).tweet.retweet++;
+      console.log(this.tweets.find(({ id }) => id == e).tweet.retweet++);
+    },
+    deleteTweet(e) {
+      // this.tweets.filter((item) => item.id !== e);
+      this.tweets.splice(
+        this.tweets.findIndex((item) => item.id == e),
+        1
+      );
+      console.log(e);
       console.log(this.tweets);
     },
   },
