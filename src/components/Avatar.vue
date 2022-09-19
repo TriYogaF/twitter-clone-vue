@@ -1,10 +1,13 @@
 <template>
-  <img :src="avatarUrl" alt="avatar" />
+  <img :src="avatar" alt="avatar" />
 </template>
 
 <script>
 export default {
-  inject: ["avatarUrl"],
+  // inject: ["avatarUrl"],
+  props: {
+    avatar: String,
+  },
 };
 </script>
 

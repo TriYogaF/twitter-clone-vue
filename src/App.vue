@@ -10,6 +10,8 @@
 <script>
 import Navbar from "./components/Navbar.vue";
 import gambar from "./assets/pic.jpg";
+import user1 from "./assets/user1.png";
+import user2 from "./assets/user2.png";
 import TweetCard from "./components/TweetCard.vue";
 import TweetInput from "./components/TweetInput.vue";
 export default {
@@ -28,6 +30,7 @@ export default {
           user: {
             fullname: "Elq",
             username: "@elq",
+            avatarUrl: user1,
           },
           tweet: {
             content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, veniam laborum a sint doloremque",
@@ -41,6 +44,7 @@ export default {
           user: {
             fullname: "Lyn",
             username: "@lyn",
+            avatarUrl: user2,
           },
           tweet: {
             content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero, veniam laborum a sint doloremque",
@@ -66,6 +70,7 @@ export default {
         user: {
           fullname: "Tri Yoga",
           username: "@triyogaf",
+          avatarUrl: gambar,
         },
         tweet: {
           content: ele,
