@@ -1,9 +1,9 @@
 <template>
   <Navbar />
   <div class="main">
-    <TweetInput v-on:tweet="tweet" />
+    <TweetInput :add-data="addTweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:like="likeCount" v-on:retweet="retweetCount" :on-delete="deleteTweet" v-bind="tweet" />
+    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:like="likeCount" v-on:retweet="retweetCount" :on-delete="deleteTweet" :add-reply="addReply" v-bind="tweet" />
   </div>
 </template>
 
@@ -12,10 +12,8 @@ import Navbar from "./components/Navbar.vue";
 import gambar from "./assets/pic.jpg";
 import user1 from "./assets/user1.png";
 import user2 from "./assets/user2.png";
-import TweetCard from "./components/TweetCard.vue";
-import TweetInput from "./components/TweetInput.vue";
 export default {
-  components: { Navbar, TweetCard, TweetInput },
+  components: { Navbar },
   data() {
     return {
       user: {
@@ -37,7 +35,34 @@ export default {
             like: 10,
             retweet: 2,
           },
-          comments: {},
+          comments: [
+            {
+              id: 1,
+              user: {
+                fullname: "Lyn",
+                username: "@lyn",
+                avatarUrl: user2,
+              },
+              reply: {
+                content: "lorem ipsum dolor sit amet",
+                like: 2,
+                retweet: 6,
+              },
+            },
+            {
+              id: 2,
+              user: {
+                fullname: "Elq",
+                username: "@elq",
+                avatarUrl: user1,
+              },
+              reply: {
+                content: "aaaaaaaaaaaaaaaaaaaa",
+                like: 1,
+                retweet: 3,
+              },
+            },
+          ],
         },
         {
           id: 2,
@@ -51,7 +76,7 @@ export default {
             like: 2,
             retweet: 0,
           },
-          comments: {},
+          comments: [],
         },
       ],
     };
@@ -64,7 +89,7 @@ export default {
     };
   },
   methods: {
-    tweet(ele) {
+    addTweet(ele) {
       this.tweets.unshift({
         id: this.getHighestId,
         user: {
@@ -77,10 +102,28 @@ export default {
           like: 0,
           retweet: 0,
         },
-        comments: {},
+        comments: [],
       });
       console.log(this.tweets);
-      console.log(ele);
+      // console.log(ele);
+    },
+    addReply(ele, num) {
+      this.tweets
+        .find(({ id }) => id == num)
+        .comments.unshift({
+          id: this.getHighestId,
+          user: {
+            fullname: "Tri Yoga",
+            username: "@triyogaf",
+            avatarUrl: gambar,
+          },
+          reply: {
+            content: ele,
+            like: 0,
+            retweet: 0,
+          },
+        });
+      console.log(this.tweets.find(({ id }) => id == num));
     },
     likeCount(e) {
       // this.tweets.find(({ id }) => id == e).tweet.like + 1;
@@ -115,7 +158,7 @@ export default {
 <style>
 .main {
   max-width: 800px;
-  background-color: rgba(255, 255, 255, 0.15);
+  /* background-color: rgba(255, 255, 255, 0.15); */
   justify-content: center;
   margin: auto;
   margin-top: 100px;
@@ -125,5 +168,12 @@ export default {
 .title {
   display: block;
   padding: 16px 4px;
+}
+
+.card {
+  margin: 16px 0px;
+  padding: 8px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 </style>

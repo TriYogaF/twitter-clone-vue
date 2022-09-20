@@ -3,7 +3,10 @@
     <textarea ref="input" v-model="tweet" name="input" id="input"></textarea>
     <div class="ket">
       <span>{{ this.tweet.length }}/10</span>
-      <button :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="$emit('tweet', tweet)">Tweet</button>
+      <div class="button-group">
+        <button v-if="inputReply">Cancel</button>
+        <button :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="handleSubmit">Tweet</button>
+      </div>
     </div>
   </div>
 </template>
@@ -14,7 +17,20 @@ export default {
     return {
       tweet: "",
       btnDisabled: true,
+      // inputReply: false,
     };
+  },
+  props: {
+    id: Number,
+    addData: Function,
+    inputReply: Boolean,
+  },
+  methods: {
+    handleSubmit() {
+      this.addData(this.tweet, this.id);
+      // console.log(this.$refs.input.value);
+      this.tweet = "";
+    },
   },
   mounted() {
     this.$refs.input.focus();
@@ -24,7 +40,7 @@ export default {
 
 <style>
 .wrap-input {
-  border: 2px solid black;
+  border: 1px solid #fff;
   border-radius: 12px;
   padding: 12px;
 }
@@ -41,6 +57,9 @@ textarea {
   justify-content: space-between;
 }
 
+button {
+  margin-inline-start: 6px;
+}
 /* .disable {
   background-color: gray;
 } */
