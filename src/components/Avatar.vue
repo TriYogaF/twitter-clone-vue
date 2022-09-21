@@ -1,5 +1,5 @@
 <template>
-  <img :src="avatar" alt="avatar" />
+  <img :src="avatar" :class="this.styleImg" alt="avatar" />
 </template>
 
 <script>
@@ -7,6 +7,7 @@ export default {
   // inject: ["avatarUrl"],
   props: {
     avatar: String,
+    styleImg: String,
   },
 };
 </script>
@@ -16,5 +17,15 @@ img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+}
+
+.isLarge {
+  width: 50px;
+  height: 50px;
+}
+
+.isSmall {
+  width: 40px;
+  height: 40px;
 }
 </style>

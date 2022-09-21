@@ -9,7 +9,7 @@
         <p>{{ username }}</p>
       </div>
       <div class="navbar-pic">
-        <Avatar :avatar="avatarUrl" />
+        <Avatar :avatar="avatarUrl" :styleImg="'isLarge'" />
         <!-- <img :src="avatarUrl" alt="pic" /> -->
       </div>
     </div>
