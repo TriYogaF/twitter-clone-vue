@@ -3,7 +3,7 @@
     <div class="content">
       <div class="post">
         <div class="post-name">
-          <Avatar :avatar="this.user.avatarUrl" />
+          <Avatar :avatar="this.user.avatarUrl" :class="'isSmall'" />
           <p class="name">{{ this.user.fullname }} {{ this.user.username }}</p>
         </div>
         <p v-if="tweet">{{ this.tweet.content }}</p>
@@ -41,19 +41,19 @@
           <span v-else-if="reply">
             {{ this.reply.retweet }}
           </span>
-          <svg v-if="this.user.username == '@triyogaf'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" @click="onDelete(this.id)">
+          <svg v-if="this.user.username == '@triyogaf'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" @click="onDelete">
             <path fill="none" d="M0 0h24v24H0z" />
             <path d="M7 4V2h10v2h5v2h-2v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6H2V4h5zM6 6v14h12V6H6zm3 3h2v8H9V9zm4 0h2v8h-2V9z" />
           </svg>
         </div>
       </div>
     </div>
-    <KeepAlive>
-      <div v-if="tweet" class="reply" @click="showReply = !showReply">
-        <TweetInput v-if="showReply" :inputReply="true" :id="this.id" :add-data="addReply" />
-        <p v-else>Reply</p>
-      </div>
-    </KeepAlive>
+    <div v-if="tweet" class="reply">
+      <KeepAlive>
+        <TweetInput v-if="showReply" :inputReply="true" :id="this.id" @addInput="addReply" @closeInput="handleShow" />
+        <p class="reply-title" v-else @click="handleShow">Reply</p>
+      </KeepAlive>
+    </div>
     <div v-if="hasComment" class="comment">
       <TweetCard v-for="item in comments" :key="item.id" v-bind="item" />
     </div>
@@ -73,24 +73,30 @@ export default {
     id: Number,
     user: Object,
     tweet: Object,
-    onDelete: Function,
     comments: Array,
     reply: Object,
-    addReply: Function,
   },
   components: { Avatar },
-  emits: ["like"],
+  emits: ["retweet", "deleteTweet", "like", "unlike", "reply", "close"],
   methods: {
     handleLike() {
       this.like = !this.like;
+      if (this.like) {
+        this.$emit("like", this.id);
+      } else if (!this.like) {
+        this.$emit("unlike", this.id);
+      }
     },
-    // addReply(e, id) {
-    //   console.log(`card ${id}`);
-    //   this.comments.unshift({
-    //     id: 11,
-    //   });
-    //   console.log(this.comments);
-    // },
+    onDelete() {
+      this.$emit("deleteTweet", this.id);
+    },
+    addReply(ele, num) {
+      console.log(`tes reply ${ele}, ${num}`);
+      this.$emit("reply", ele, num);
+    },
+    handleShow() {
+      this.showReply = !this.showReply;
+    },
   },
   computed: {
     hasComment() {
@@ -117,19 +123,19 @@ export default {
 } */
 
 .card {
-  margin: 16px 4px;
-  padding: 8px;
+  margin: 16px 4px 4px 4px;
+  padding: 4px;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #645caa;
 }
 
 .content {
   display: flex;
   /* justify-content: center; */
-  background-color: #645caa;
+  background-color: #25316d;
   border-radius: 12px;
   padding: 12px;
-  margin: 12px;
+  margin: 8px 8px 4px 8px;
 }
 .post-name {
   display: flex;
@@ -144,10 +150,19 @@ export default {
 }
 
 .reply {
-  padding: 0px 24px;
+  padding: 4px 8px;
 }
 
 .wrap-input {
   margin: 4px;
+}
+
+.reply-title {
+  font-weight: 500;
+  padding: 4px 16px;
+  font-size: large;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  /* border: 1px solid black; */
 }
 </style>

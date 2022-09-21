@@ -1,9 +1,9 @@
 <template>
   <Navbar />
   <div class="main">
-    <TweetInput :add-data="addTweet" />
+    <TweetInput @addInput="addTweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:like="likeCount" v-on:retweet="retweetCount" :on-delete="deleteTweet" :add-reply="addReply" v-bind="tweet" />
+    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" v-bind="tweet" />
   </div>
 </template>
 
@@ -125,16 +125,16 @@ export default {
         });
       console.log(this.tweets.find(({ id }) => id == num));
     },
-    likeCount(e) {
-      // this.tweets.find(({ id }) => id == e).tweet.like + 1;
+    doLike(e) {
       console.log(this.tweets.find(({ id }) => id == e).tweet.like++);
-      // console.log(e.target);
+    },
+    doUnlike(e) {
+      console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
     },
     retweetCount(e) {
-      // this.tweets.find(({ id }) => id == e).tweet.retweet++;
-      console.log(this.tweets.find(({ id }) => id == e).tweet.retweet++);
+      this.tweets.find(({ id }) => id == e).tweet.retweet++;
     },
-    deleteTweet(e) {
+    ondeleteTweet(e) {
       // this.tweets.filter((item) => item.id !== e);
       this.tweets.splice(
         this.tweets.findIndex((item) => item.id == e),
