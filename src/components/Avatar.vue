@@ -27,5 +27,6 @@ img {
 .isSmall {
   width: 40px;
   height: 40px;
+  border: 2px solid white;
 }
 </style>

@@ -3,7 +3,7 @@
   <div class="main">
     <TweetInput @addInput="addTweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" v-bind="tweet" />
+    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" @likeComment="doLikeComment" v-bind="tweet" />
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
           },
           comments: [
             {
-              id: 1,
+              id: 1.1,
               user: {
                 fullname: "Lyn",
                 username: "@lyn",
@@ -50,7 +50,7 @@ export default {
               },
             },
             {
-              id: 2,
+              id: 1.2,
               user: {
                 fullname: "Elq",
                 username: "@elq",
@@ -89,6 +89,14 @@ export default {
     };
   },
   methods: {
+    // clickFocus() {
+    //   this.$refs.tes1.focus();
+    //   console.log(`focus`);
+    // },
+    // clickBlur() {
+    //   this.$refs.tes1.blur();
+    //   console.log(`blur`);
+    // },
     addTweet(ele) {
       this.tweets.unshift({
         id: this.getHighestId,
@@ -111,7 +119,7 @@ export default {
       this.tweets
         .find(({ id }) => id == num)
         .comments.unshift({
-          id: this.getHighestId,
+          id: parseFloat(`${num}.${this.getHighestId}`),
           user: {
             fullname: "Tri Yoga",
             username: "@triyogaf",
@@ -131,6 +139,13 @@ export default {
     doUnlike(e) {
       console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
     },
+    doLikeComment(e) {
+      console.log(`like comment from parents`);
+      console.log(this.findCommentById(e));
+    },
+    doUnlikeComment(e) {
+      console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
+    },
     retweetCount(e) {
       this.tweets.find(({ id }) => id == e).tweet.retweet++;
     },
@@ -143,6 +158,12 @@ export default {
       console.log(e);
       console.log(this.tweets);
     },
+
+    findCommentById(e) {
+      let results = {};
+      this.tweets.some((o) => (results = o.id === e ? o : find(o.comments || [], e)));
+      return results;
+    },
   },
   computed: {
     getHighestId() {
@@ -152,6 +173,12 @@ export default {
       return Math.max(...ids) + 1;
     },
   },
+  // mounted() {
+  //   this.$refs.tes1.focus();
+  // },
+  // unmounted() {
+  //   this.$refs.tes1.blur();
+  // },
 };
 </script>
 
