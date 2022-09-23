@@ -3,7 +3,7 @@
   <div class="main">
     <TweetInput @addInput="addTweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" @likeComment="doLikeComment" v-bind="tweet" />
+    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" v-bind="tweet" />
   </div>
 </template>
 
@@ -89,14 +89,6 @@ export default {
     };
   },
   methods: {
-    // clickFocus() {
-    //   this.$refs.tes1.focus();
-    //   console.log(`focus`);
-    // },
-    // clickBlur() {
-    //   this.$refs.tes1.blur();
-    //   console.log(`blur`);
-    // },
     addTweet(ele) {
       this.tweets.unshift({
         id: this.getHighestId,
@@ -139,13 +131,13 @@ export default {
     doUnlike(e) {
       console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
     },
-    doLikeComment(e) {
-      console.log(`like comment from parents`);
-      console.log(this.findCommentById(e));
-    },
-    doUnlikeComment(e) {
-      console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
-    },
+    // doLikeComment(e) {
+    //   console.log(`like comment from parents`);
+    //   console.log(this.findCommentById(e));
+    // },
+    // doUnlikeComment(e) {
+    //   console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
+    // },
     retweetCount(e) {
       this.tweets.find(({ id }) => id == e).tweet.retweet++;
     },
@@ -159,11 +151,11 @@ export default {
       console.log(this.tweets);
     },
 
-    findCommentById(e) {
-      let results = {};
-      this.tweets.some((o) => (results = o.id === e ? o : find(o.comments || [], e)));
-      return results;
-    },
+    // findCommentById(e) {
+    //   let results = {};
+    //   this.tweets.some((o) => (results = o.id === e ? o : find(o.comments || [], e)));
+    //   return results;
+    // },
   },
   computed: {
     getHighestId() {
