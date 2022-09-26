@@ -3,41 +3,29 @@
     <div class="content">
       <div class="post">
         <div class="post-name">
-          <Avatar :avatar="this.user.avatarUrl" :class="'isSmall'" />
-          <p class="name">{{ this.user.fullname }} {{ this.user.username }}</p>
+          <Avatar :avatar="item.user.avatarUrl" :class="'isSmall'" />
+          <p class="name">{{ item.user.fullname }} {{ item.user.username }}</p>
         </div>
-        <p v-if="tweet">{{ this.tweet.content }}</p>
-        <p v-else-if="reply">{{ this.reply.content }}</p>
+        <p>{{ item.tweet.content }}</p>
         <div class="likeandretweet">
-          <span v-if="tweet" class="iconStyle">
-            <Icon :name="'iconLike'" @like="handleLike" :id="this.id" />
-            {{ this.tweet.like }}
+          <span class="iconStyle">
+            <Icon :name="'iconLike'" @like="handleLike" :id="item.id" />
+            {{ item.tweet.like }}
+            <Icon :name="'retweet'" @retweet="handleRetweet" :id="item.id" />
+            {{ item.tweet.retweet }}
+            <Icon :name="item.user.username" @delete="onDelete" :id="item.id" />
           </span>
-          <span v-else-if="reply" class="iconStyle">
-            <Icon :name="'iconLike'" @likeComment="handleLikeComment" :id="this.id" />
-            {{ this.reply.like }}
-          </span>
-          <span v-if="tweet" class="iconStyle">
-            <Icon :name="'retweet'" @retweet="handleRetweet" :id="this.id" />
-            {{ this.tweet.retweet }}
-          </span>
-          <span v-else-if="reply" class="iconStyle">
-            <Icon :name="'retweet'" @retweet="handleRetweetComment" :id="this.id" />
-            {{ this.reply.retweet }}
-          </span>
-
-          <Icon :name="this.user.username" @delete="onDelete" :id="this.id" />
         </div>
       </div>
     </div>
-    <div v-if="tweet" class="reply">
+    <div v-if="hasComment" class="reply">
       <KeepAlive>
-        <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.id" @addInput="addReply" @closeInput="handleShow" />
+        <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" />
         <p class="reply-title" v-else @click="handleShow">Reply</p>
       </KeepAlive>
     </div>
     <div v-if="hasComment" class="comment">
-      <TweetCard @likeComment="handleLikeComment" v-for="item in comments" :key="item.id" v-bind="item" />
+      <TweetCard v-for="child in item.comments" :key="child.id" :item="child" @deleteTweetComment="onDeleteComment" />
     </div>
   </div>
 </template>
@@ -46,6 +34,9 @@
 import Avatar from "./Avatar.vue";
 import Icon from "./Icons/Icon.vue";
 export default {
+  mounted() {
+    console.log(this.item.user.username);
+  },
   data() {
     return {
       like: false,
@@ -54,45 +45,64 @@ export default {
     };
   },
   props: {
-    id: Number,
-    user: Object,
-    tweet: Object,
-    comments: Array,
-    reply: Object,
+    item: {
+      type: Object,
+      required: true,
+    },
   },
   components: { Avatar, Icon },
-  emits: ["retweet", "deleteTweet", "like", "unlike", "reply", "close", "likeComment"],
+  emits: ["retweet", "deleteTweet", "like", "unlike", "reply", "close", "likeComment", "deleteTweetComment"],
   methods: {
     handleRetweet() {
-      this.$emit("retweet", this.id);
-    },
-    handleRetweetComment() {
-      this.reply.retweet++;
+      if (this.hasComment) {
+        this.$emit("retweet", this.item.id);
+      } else {
+        this.reply.retweet++;
+      }
     },
     handleLike() {
-      this.like = !this.like;
-      if (this.like) {
-        this.$emit("like", this.id);
-        console.log(`like tweet`);
-      } else if (!this.like) {
-        this.$emit("unlike", this.id);
-        console.log(`disike tweet`);
+      if (this.hasComment) {
+        this.like = !this.like;
+        if (this.like) {
+          this.$emit("like", this.item.id);
+          console.log(`like tweet`);
+        } else if (!this.like) {
+          this.$emit("unlike", this.item.id);
+          console.log(`disike tweet`);
+        }
+      } else {
+        this.likeDislike = !this.likeDislike;
+        if (this.likeDislike) {
+          console.log(this.item.tweet.like++);
+        } else if (!this.likeDislike) {
+          console.log(this.item.tweet.like--);
+        }
       }
     },
     handleLikeComment() {
       if (this.reply) {
         this.likeDislike = !this.likeDislike;
         if (this.likeDislike) {
-          // this.$emit("likeComment", this.id);
-          console.log(this.reply.like++);
+          console.log(this.child.tweet.like++);
         } else if (!this.likeDislike) {
-          // this.$emit("unlike", this.id);
-          console.log(this.reply.like--);
+          console.log(this.child.tweet.like--);
         }
       }
     },
     onDelete() {
-      this.$emit("deleteTweet", this.id);
+      if (this.hasComment) {
+        this.$emit("deleteTweet", this.item.id);
+        console.log(this.item.id);
+      } else {
+        this.$emit("deleteTweetComment", this.item.id);
+        console.log(this.item.id);
+      }
+    },
+    onDeleteComment(e) {
+      this.item.comments.splice(
+        this.item.comments.findIndex((item) => item.id == e),
+        1
+      );
     },
     addReply(ele, num) {
       console.log(`tes reply ${ele}, ${num}`);
@@ -104,8 +114,8 @@ export default {
   },
   computed: {
     hasComment() {
-      const comments = this.comments;
-      return comments && comments.length > 0;
+      const { comments } = this.item;
+      return comments && comments.length >= 0;
     },
   },
 };
@@ -167,12 +177,10 @@ export default {
   font-size: large;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 12px;
-  /* border: 1px solid black; */
 }
 
 .iconStyle {
   display: flex;
-  /* align-items: center; */
   gap: 6px;
 }
 </style>

@@ -3,7 +3,7 @@
   <div class="main">
     <TweetInput @addInput="addTweet" />
     <h3 class="title">Feeds</h3>
-    <TweetCard v-for="tweet in tweets" v-bind:key="tweet.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" v-bind="tweet" />
+    <TweetCard v-for="item in tweets" v-bind:key="item.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" :item="item" />
   </div>
 </template>
 
@@ -43,7 +43,7 @@ export default {
                 username: "@lyn",
                 avatarUrl: user2,
               },
-              reply: {
+              tweet: {
                 content: "lorem ipsum dolor sit amet",
                 like: 2,
                 retweet: 6,
@@ -56,10 +56,23 @@ export default {
                 username: "@elq",
                 avatarUrl: user1,
               },
-              reply: {
+              tweet: {
                 content: "aaaaaaaaaaaaaaaaaaaa",
                 like: 1,
                 retweet: 3,
+              },
+            },
+            {
+              id: 1.3,
+              user: {
+                fullname: "Tri Yoga",
+                username: "@triyogaf",
+                avatarUrl: gambar,
+              },
+              tweet: {
+                content: "lorem ipsum",
+                like: 33,
+                retweet: 11,
               },
             },
           ],
@@ -117,7 +130,7 @@ export default {
             username: "@triyogaf",
             avatarUrl: gambar,
           },
-          reply: {
+          tweet: {
             content: ele,
             like: 0,
             retweet: 0,
@@ -131,18 +144,10 @@ export default {
     doUnlike(e) {
       console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
     },
-    // doLikeComment(e) {
-    //   console.log(`like comment from parents`);
-    //   console.log(this.findCommentById(e));
-    // },
-    // doUnlikeComment(e) {
-    //   console.log(this.tweets.find(({ id }) => id == e).tweet.like--);
-    // },
     retweetCount(e) {
       this.tweets.find(({ id }) => id == e).tweet.retweet++;
     },
     ondeleteTweet(e) {
-      // this.tweets.filter((item) => item.id !== e);
       this.tweets.splice(
         this.tweets.findIndex((item) => item.id == e),
         1
@@ -150,12 +155,6 @@ export default {
       console.log(e);
       console.log(this.tweets);
     },
-
-    // findCommentById(e) {
-    //   let results = {};
-    //   this.tweets.some((o) => (results = o.id === e ? o : find(o.comments || [], e)));
-    //   return results;
-    // },
   },
   computed: {
     getHighestId() {
@@ -165,19 +164,12 @@ export default {
       return Math.max(...ids) + 1;
     },
   },
-  // mounted() {
-  //   this.$refs.tes1.focus();
-  // },
-  // unmounted() {
-  //   this.$refs.tes1.blur();
-  // },
 };
 </script>
 
 <style>
 .main {
   max-width: 800px;
-  /* background-color: rgba(255, 255, 255, 0.15); */
   justify-content: center;
   margin: auto;
   margin-top: 100px;
