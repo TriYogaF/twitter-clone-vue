@@ -20,7 +20,7 @@
     </div>
     <div v-if="hasComment" class="reply">
       <!-- <KeepAlive> -->
-      <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" :temp="temp" />
+      <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" />
       <p class="reply-title" v-else @click="handleShow">Reply</p>
       <!-- </KeepAlive> -->
     </div>
