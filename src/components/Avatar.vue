@@ -22,11 +22,18 @@ img {
 .isLarge {
   width: 50px;
   height: 50px;
+  border: 5px double white;
 }
 
-.isSmall {
+.tweetAvatar {
   width: 40px;
   height: 40px;
+  border: 2px solid white;
+}
+
+.commentAvatar {
+  width: 30px;
+  height: 30px;
   border: 2px solid white;
 }
 </style>

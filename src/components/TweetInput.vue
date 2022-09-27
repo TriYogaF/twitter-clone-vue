@@ -5,7 +5,7 @@
       <div class="ket" @click="this.tweet.length <= 0 ? $emit('closeInput') : ''">
         <span>{{ this.tweet.length }}/10</span>
         <div class="button-group">
-          <button v-if="inputReply" @click="this.tweet.length > 0 ? $emit('closeInput') : ''">Cancel</button>
+          <button v-if="inputReply" @click="this.tweet.length > 0 ? $emit('closeInput', this.tweet) : ''">Cancel</button>
           <button :disabled="this.tweet.length > 10 ? true : false" type="submit">Tweet</button>
         </div>
       </div>
@@ -21,21 +21,30 @@ export default {
       btnDisabled: true,
     };
   },
+  mounted() {
+    console.log(this.temp);
+  },
   emits: ["addInput", "closeInput"],
   props: {
     id: Number,
     inputReply: Boolean,
+    temp: String,
   },
   methods: {
     handleSubmit() {
       this.$emit("addInput", this.tweet, this.id);
       this.$emit("closeInput");
       this.$refs.form.reset();
-      this.tweet = "";
+      // this.tweet = "";
     },
   },
   mounted() {
     this.$refs.input.focus();
+  },
+
+  updated() {
+    // this.$refs.input.focus();
+    console.log(this.tweet);
   },
 };
 </script>

@@ -3,13 +3,13 @@
     <div class="content">
       <div class="post">
         <div class="post-name">
-          <Avatar :avatar="item.user.avatarUrl" :class="'isSmall'" />
+          <Avatar :avatar="item.user.avatarUrl" :class="hasComment ? 'tweetAvatar' : 'commentAvatar'" />
           <p class="name">{{ item.user.fullname }} {{ item.user.username }}</p>
         </div>
         <p>{{ item.tweet.content }}</p>
         <div class="likeandretweet">
           <span class="iconStyle">
-            <Icon :name="'iconLike'" @like="handleLike" :id="item.id" />
+            <component :is="currentIcon" @click="handleLike"></component>
             {{ item.tweet.like }}
             <Icon :name="'retweet'" @retweet="handleRetweet" :id="item.id" />
             {{ item.tweet.retweet }}
@@ -19,10 +19,10 @@
       </div>
     </div>
     <div v-if="hasComment" class="reply">
-      <KeepAlive>
-        <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" />
-        <p class="reply-title" v-else @click="handleShow">Reply</p>
-      </KeepAlive>
+      <!-- <KeepAlive> -->
+      <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" :temp="temp" />
+      <p class="reply-title" v-else @click="handleShow">Reply</p>
+      <!-- </KeepAlive> -->
     </div>
     <div v-if="hasComment" class="comment">
       <TweetCard v-for="child in item.comments" :key="child.id" :item="child" @deleteTweetComment="onDeleteComment" />
@@ -33,15 +33,17 @@
 <script>
 import Avatar from "./Avatar.vue";
 import Icon from "./Icons/Icon.vue";
+import like from "./Icons/like.vue";
+import dislike from "./Icons/dislike.vue";
 export default {
-  mounted() {
-    console.log(this.item.user.username);
-  },
   data() {
     return {
+      temp: "asdasd",
       like: false,
       likeDislike: false,
       showReply: false,
+      currentIcon: "dislike",
+      icons: ["dislike", "like"],
     };
   },
   props: {
@@ -50,7 +52,7 @@ export default {
       required: true,
     },
   },
-  components: { Avatar, Icon },
+  components: { Avatar, Icon, like, dislike },
   emits: ["retweet", "deleteTweet", "like", "unlike", "reply", "close", "likeComment", "deleteTweetComment"],
   methods: {
     handleRetweet() {
@@ -61,31 +63,16 @@ export default {
       }
     },
     handleLike() {
+      this.currentIcon == "dislike" ? (this.currentIcon = "like") : (this.currentIcon = "dislike");
       if (this.hasComment) {
-        this.like = !this.like;
-        if (this.like) {
+        if (this.currentIcon == "like") {
           this.$emit("like", this.item.id);
-          console.log(`like tweet`);
-        } else if (!this.like) {
-          this.$emit("unlike", this.item.id);
-          console.log(`disike tweet`);
-        }
+        } else this.$emit("unlike", this.item.id);
       } else {
-        this.likeDislike = !this.likeDislike;
-        if (this.likeDislike) {
-          console.log(this.item.tweet.like++);
-        } else if (!this.likeDislike) {
-          console.log(this.item.tweet.like--);
-        }
-      }
-    },
-    handleLikeComment() {
-      if (this.reply) {
-        this.likeDislike = !this.likeDislike;
-        if (this.likeDislike) {
-          console.log(this.child.tweet.like++);
-        } else if (!this.likeDislike) {
-          console.log(this.child.tweet.like--);
+        if (this.currentIcon == "like") {
+          this.item.tweet.like++;
+        } else {
+          this.item.tweet.like--;
         }
       }
     },
@@ -108,8 +95,10 @@ export default {
       console.log(`tes reply ${ele}, ${num}`);
       this.$emit("reply", ele, num);
     },
-    handleShow() {
+    handleShow(e) {
       this.showReply = !this.showReply;
+      this.temp = e;
+      console.log(e);
     },
   },
   computed: {
