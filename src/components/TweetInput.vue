@@ -1,13 +1,15 @@
 <template>
   <div class="wrap-input">
-    <textarea ref="input" v-model="tweet" name="input" id="input"></textarea>
-    <div class="ket" @click="this.tweet.length <= 0 ? $emit('closeInput') : ''">
-      <span>{{ this.tweet.length }}/10</span>
-      <div class="button-group">
-        <button v-if="inputReply" @click="this.tweet.length > 0 ? $emit('closeInput') : ''">Cancel</button>
-        <button :disabled="this.tweet.length > 10 ? true : false" type="submit" @click="handleSubmit">Tweet</button>
+    <form ref="form" @submit.prevent="handleSubmit">
+      <textarea ref="input" v-model="tweet" name="input" id="input"></textarea>
+      <div class="ket" @click="this.tweet.length <= 0 ? $emit('closeInput') : ''">
+        <span>{{ this.tweet.length }}/10</span>
+        <div class="button-group">
+          <button v-if="inputReply" @click="this.tweet.length > 0 ? $emit('closeInput') : ''">Cancel</button>
+          <button :disabled="this.tweet.length > 10 ? true : false" type="submit">Tweet</button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -17,29 +19,32 @@ export default {
     return {
       tweet: "",
       btnDisabled: true,
-      // inputReply: false,
     };
   },
+  // mounted() {
+  //   console.log(this.temp);
+  // },
   emits: ["addInput", "closeInput"],
   props: {
     id: Number,
-    // addData: Function,
     inputReply: Boolean,
+    temp: String,
   },
   methods: {
     handleSubmit() {
       this.$emit("addInput", this.tweet, this.id);
-      this.tweet = "";
+      this.$emit("closeInput");
+      this.$refs.form.reset();
+      // this.tweet = "";
     },
-    // handleClose() {
-    //   if (this.tweet.length > 0) {
-    //     this.$emit("cancelButton");
-    //   } else this.$emit("closeInput");
-    //   console.log(this.tweet.length);
-    // },
   },
   mounted() {
     this.$refs.input.focus();
+  },
+
+  updated() {
+    // this.$refs.input.focus();
+    console.log(this.tweet);
   },
 };
 </script>
