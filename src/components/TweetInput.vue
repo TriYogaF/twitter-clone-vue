@@ -21,14 +21,10 @@ export default {
       btnDisabled: true,
     };
   },
-  // mounted() {
-  //   console.log(this.temp);
-  // },
   emits: ["addInput", "closeInput"],
   props: {
     id: Number,
     inputReply: Boolean,
-    temp: String,
   },
   methods: {
     handleSubmit() {
@@ -42,10 +38,10 @@ export default {
     this.$refs.input.focus();
   },
 
-  updated() {
-    // this.$refs.input.focus();
-    console.log(this.tweet);
-  },
+  // updated() {
+  //   this.$refs.input.focus();
+  //   console.log(this.tweet);
+  // },
 };
 </script>
 
@@ -71,6 +67,10 @@ textarea {
 
 button {
   margin-inline-start: 6px;
+}
+
+button:hover {
+  cursor: pointer;
 }
 /* .disable {
   background-color: gray;

@@ -23,4 +23,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+svg:hover {
+  cursor: pointer;
+}
+</style>

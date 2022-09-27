@@ -38,7 +38,6 @@ import dislike from "./Icons/dislike.vue";
 export default {
   data() {
     return {
-      temp: "asdasd",
       like: false,
       likeDislike: false,
       showReply: false,
@@ -95,10 +94,8 @@ export default {
       console.log(`tes reply ${ele}, ${num}`);
       this.$emit("reply", ele, num);
     },
-    handleShow(e) {
+    handleShow() {
       this.showReply = !this.showReply;
-      this.temp = e;
-      console.log(e);
     },
   },
   computed: {
