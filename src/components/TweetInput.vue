@@ -1,11 +1,11 @@
 <template>
   <div class="wrap-input">
     <form ref="form" @submit.prevent="handleSubmit">
-      <textarea ref="input" v-model="tweet" name="input" id="input"></textarea>
-      <div class="ket" @click="this.tweet.length <= 0 ? $emit('closeInput') : ''">
+      <textarea ref="input" :value="tweet" name="input" id="input" @input="$emit('update:tweet', $event.target.value)" @blur="handleBlur"></textarea>
+      <div class="ket">
         <span>{{ this.tweet.length }}/10</span>
         <div class="button-group">
-          <button v-if="inputReply" @click="this.tweet.length > 0 ? $emit('closeInput') : ''">Cancel</button>
+          <button type="button" @click="handleBlurCancel" v-if="inputReply">Cancel</button>
           <button :disabled="this.tweet.length > 10 ? true : false" type="submit">Tweet</button>
         </div>
       </div>
@@ -17,21 +17,27 @@
 export default {
   data() {
     return {
-      tweet: "",
+      // tweet: "",
       btnDisabled: true,
     };
   },
-  emits: ["addInput", "closeInput"],
+  emits: ["addInput", "closeInput", "update:tweet", "blur", "blurCancel"],
   props: {
     id: Number,
     inputReply: Boolean,
+    tweet: String,
   },
   methods: {
+    handleBlurCancel() {
+      this.$emit("blurCancel");
+    },
+    handleBlur() {
+      this.$emit("blur", this.tweet);
+    },
     handleSubmit() {
       this.$emit("addInput", this.tweet, this.id);
-      this.$emit("closeInput");
       this.$refs.form.reset();
-      // this.tweet = "";
+      this.$emit("blurCancel");
     },
   },
   mounted() {

@@ -20,7 +20,7 @@
     </div>
     <div v-if="hasComment" class="reply">
       <!-- <KeepAlive> -->
-      <TweetInput ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @closeInput="handleShow" />
+      <TweetInput v-model:tweet="tweet" ref="input" v-if="showReply" :inputReply="true" :id="this.item.id" @addInput="addReply" @blur="closeInput" @blurCancel="closeInputCancel" />
       <p class="reply-title" v-else @click="handleShow">Reply</p>
       <!-- </KeepAlive> -->
     </div>
@@ -38,6 +38,7 @@ import dislike from "./Icons/dislike.vue";
 export default {
   data() {
     return {
+      tweet: "",
       like: false,
       likeDislike: false,
       showReply: false,
@@ -54,6 +55,14 @@ export default {
   components: { Avatar, Icon, like, dislike },
   emits: ["retweet", "deleteTweet", "like", "unlike", "reply", "close", "likeComment", "deleteTweetComment"],
   methods: {
+    closeInput(e) {
+      if (e.length == 0) {
+        this.handleShow();
+      }
+    },
+    closeInputCancel() {
+      this.handleShow();
+    },
     handleRetweet() {
       if (this.hasComment) {
         this.$emit("retweet", this.item.id);
@@ -93,6 +102,7 @@ export default {
     addReply(ele, num) {
       console.log(`tes reply ${ele}, ${num}`);
       this.$emit("reply", ele, num);
+      this.tweet = "";
     },
     handleShow() {
       this.showReply = !this.showReply;

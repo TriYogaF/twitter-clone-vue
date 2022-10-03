@@ -1,7 +1,7 @@
 <template>
   <Navbar />
   <div class="main">
-    <TweetInput @addInput="addTweet" />
+    <TweetInput v-model:tweet="tweet" @addInput="addTweet" />
     <h3 class="title">Feeds</h3>
     <TweetCard v-for="item in tweets" v-bind:key="item.id" v-on:retweet="retweetCount" v-on:deleteTweet="ondeleteTweet" v-on:like="doLike" @unlike="doUnlike" @reply="addReply" :item="item" />
   </div>
@@ -16,6 +16,7 @@ export default {
   components: { Navbar },
   data() {
     return {
+      tweet: "",
       user: {
         fullname: "Tri Yoga",
         username: "@triyogaf",
